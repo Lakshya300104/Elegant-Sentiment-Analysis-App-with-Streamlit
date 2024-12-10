@@ -200,39 +200,89 @@ def main_app():
 
 def login_page():
     st.title("Login")
+    st.write("🔑 Welcome back, emotion detective! 🕵️‍♂️ Ready to crack some emotional mysteries?")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
+    st.markdown("""
+        ---
+        **Why Log In?**
+        - 🧠 Continue mastering the art of emotional analysis.
+        - 💬 Decode hidden meanings in your chats like a pro.
+        - 🌟 Prove to the world that "fine" isn’t always fine.
+        - 🕵️‍♂️ Your emotional investigation is just one click away!
+
+        **"Let’s dive back into the world of emotions and see if '😂' really means they’re laughing!"**
+        """)
     if st.button("Login"):
         if login(username, password):
-            st.success(f"Welcome, {st.session_state['username']}!")
+            st.success(f"Welcome back, {username}! 🎉 Let’s solve some emotional puzzles!")
         else:
-            st.error("Invalid username or password.")
+            st.error("Uh-oh! Invalid username or password. Try again!")
 
 
 def signup_page():
     st.title("Sign Up")
+    st.write("🎉 Join the Sentiment Analyzer Club and become an emotion detective! 🕵️‍♂️")
+    st.markdown("""
+            ---
+            **Why Sign Up?**
+            - 💌 Analyze emotions in text messages to know if they *really* like you.
+            - 🧠 Spot hidden sarcasm in your friend's chats like a pro.
+            - 🤔 Uncover the truth behind, "I'm fine" (are they really fine?).
+            - 🌟 Make every conversation more meaningful!
+
+            **"Analyze emotions, decode mysteries, and know if she’s being honest!"**
+            """)
+    st.markdown("---")
     username = st.text_input("New Username")
     password = st.text_input("New Password", type="password")
 
+
     if st.button("Sign Up"):
         if signup(username, password):
-            st.success(f"Account creation successful. Welcome, {username}!")
+            st.success(f"Welcome aboard, {username}! 🎉 Your emotion-detecting adventure begins now.")
             st.session_state['username'] = username
         else:
-            st.error("Username already taken. Please choose another.")
+            st.error("Oops! Please enter some other username")
 
 
 def guest_page():
     st.title("Continue as Guest")
     st.session_state['username'] = "Guest"
-    st.info("Guest Mode Activated.")
+    st.write("🌟 Welcome, Curious Explorer! 👀")
+
+    # Fun and engaging message for guest users
+    st.markdown("""
+        ---
+        **Why Explore as a Guest?**
+        - 🧪 Test your emotional analysis skills without any commitments.
+        - 💬 See if you can uncover the secrets behind those "I’m fine" texts.
+        - 🕵️‍♂️ Try out the features and see if you’re ready to join the Sentiment Analyzer Club.
+        - 🎉 Remember, even Sherlock started somewhere!
+
+        **"Explore freely, analyze deeply, and let the fun begin!"**
+        """)
+
+    st.info("👤 You are currently exploring as a Guest. Some features may be limited.")
 
 def sentiment_page():
     st.markdown("<h1 class='big-font'>Sentiment Analysing App</h1>", unsafe_allow_html=True)
     models_av=["Select One","Logistic Regression", "Naive Bias"]
     choice = st.selectbox("Which Model do you want to use?",models_av)
     if choice == "Naive Bias":
-        st.markdown("<h3 class='big-font'>You are using Naive Bias</h1>", unsafe_allow_html=True)
+        st.subheader("Naive Bayes")
+        st.write("""
+            **What will happen if you use Naive Bayes:**
+            - Naive Bayes assumes that features are conditionally independent, which simplifies computation.
+            - It performs extremely well for text classification tasks, including sentiment analysis.
+            - It quickly converges even with small datasets.
+
+            **Benefits of using Naive Bayes:**
+            - Computationally efficient and very fast to train and predict.
+            - Performs well even with limited training data.
+            - Robust to irrelevant features due to its probabilistic nature.
+            - Suitable for high-dimensional data like text data with a large vocabulary size.
+            """)
         model,vectorizer = load_naive_bias()
 
         text = st.text_area("Enter a piece of text to analyze:")
@@ -251,7 +301,19 @@ def sentiment_page():
 
 
     elif choice == "Logistic Regression":
-        st.markdown("<h3 class='big-font'>You are using Logistic Regression</h1>", unsafe_allow_html=True)
+        st.subheader("Logistic Regression")
+        st.write("""
+            **What will happen if you use Logistic Regression:**
+            - Logistic Regression works well for binary classification problems like sentiment analysis.
+            - It predicts probabilities, allowing for confidence measures in the predictions.
+            - Handles relationships between features and target variable linearly.
+
+            **Benefits of using Logistic Regression:**
+            - Works well when the relationship between the features and the target variable is approximately linear.
+            - Provides interpretable coefficients that indicate the importance of each feature.
+            - Robust to noise in the dataset and can perform well even with fewer data points.
+            - Can output probabilities for predictions, which can be useful in decision-making.
+            """)
         model, vectorizer = load_logistic_regression()
         text = st.text_area("Enter a piece of text to analyze:")
         text = stemming(text)
@@ -266,6 +328,40 @@ def sentiment_page():
 
                 store_sentiment_analysis_results(st.session_state['username'], text, prediction)
                 display_previous_results()
+    elif choice == "Select One":
+        st.write("Please select a model from the dropdown above to learn about its benefits.")
+        # Display additional notes or comparisons
+        st.markdown("---")
+        st.subheader("Comparison of Logistic Regression and Naive Bayes")
+        st.write("""
+        While both Logistic Regression and Naive Bayes are widely used for classification tasks, their core working principles and strengths differ significantly:
+
+        - **Handling Feature Relationships**:
+            - Logistic Regression accounts for correlations and interdependencies between features, making it better for datasets where features are not independent.
+            - Naive Bayes assumes all features are independent, which simplifies computation but may reduce performance if the independence assumption is violated.
+
+        - **Performance on Small Data**:
+            - Naive Bayes performs exceptionally well with small datasets and sparse data, such as in text classification.
+            - Logistic Regression may need more data to perform optimally, especially when feature relationships are complex.
+
+        - **Interpretability**:
+            - Logistic Regression provides interpretable coefficients that help in understanding the importance of each feature.
+            - Naive Bayes lacks interpretability as it operates on conditional probabilities.
+
+        - **Speed**:
+            - Naive Bayes is faster to train and predict, making it suitable for real-time applications and high-dimensional datasets.
+            - Logistic Regression, though computationally heavier, offers better accuracy when features are correlated.
+
+        - **Accuracy**:
+            - Logistic Regression generally outperforms Naive Bayes when the dataset is large, and the independence assumption of Naive Bayes does not hold.
+            - Naive Bayes can sometimes outperform Logistic Regression on small, clean datasets with independent features.
+
+        In summary:
+        - Choose **Logistic Regression** for accuracy, interpretability, and handling feature correlations.
+        - Choose **Naive Bayes** for speed, efficiency, and small datasets.
+        """)
+
+
 
 #Storing into DB
 def store_sentiment_analysis_results(username, text, sentiment):
@@ -286,6 +382,18 @@ def display_previous_results():
 
 def metrics_page():
     st.title("Metrics")
+    st.write("Welcome to your personal analytics dashboard! 🚀")
+    st.markdown("""
+        ---
+        **Why Check Metrics?**
+        - 🔍 See how many emotions you've uncovered so far.
+        - 🧠 Find out if you're more of a positivity champion or a negativity detective.
+        - 🎯 Track your progress and set new emotional analysis goals.
+        - 🕵️‍♂️ Are you the Sherlock Holmes of sentiment analysis yet?
+
+        **"Because data speaks louder than words!"**
+        """)
+    st.markdown("---")
 
     previous_results = conn.execute('SELECT sentiment FROM sentiment_analysis_results WHERE username=?',
                                     (st.session_state['username'],)).fetchall()
@@ -301,9 +409,16 @@ def metrics_page():
         sentiment_counts_df = pd.DataFrame.from_dict(sentiment_counts, orient='index', columns=['Count'])
         st.bar_chart(sentiment_counts_df)
 
-        st.subheader("Analysis Metrics")
-        st.metric(label="Total Positive Sentiments", value=sentiment_counts['Positive'])
-        st.metric(label="Total Negative Sentiments", value=sentiment_counts['Negative'])
+        st.subheader("Sentiment Count Summary")
+        st.metric(label="Total Positive Sentiments 🎉", value=sentiment_counts['Positive'])
+        st.metric(label="Total Negative Sentiments 😢", value=sentiment_counts['Negative'])
+
+        if sentiment_counts['Positive'] > sentiment_counts['Negative']:
+            st.success("You're spreading positivity everywhere! 🌈 Keep up the great work!")
+        else:
+            st.warning("You seem to be detecting more negative vibes. Remember, every cloud has a silver lining! ☁️🌤")
+
+
     else:
         st.info("No sentiment analysis results to display for this user.")
 
